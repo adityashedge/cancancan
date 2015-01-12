@@ -256,11 +256,11 @@ module CanCan
 
     def unauthorized_message_keys(action, subject)
       subject = (subject.class == Class ? subject : subject.class).name.underscore unless subject.kind_of? Symbol
-      [subject, :all].map do |try_subject|
+      [subject, :all].flat_map do |try_subject|
         [aliases_for_action(action), :manage].flatten.map do |try_action|
           :"#{try_action}.#{try_subject}"
         end
-      end.flatten
+      end
     end
 
     # Accepts an array of actions and returns an array of actions which match.
@@ -314,7 +314,6 @@ module CanCan
         rule.relevant? action, subject
       end
       relevant.reverse!
-      relevant
     end
 
     def relevant_rules_for_match(action, subject)
